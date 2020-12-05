@@ -1,0 +1,144 @@
+1) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity leftshiftreg is
+    Port ( input : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           output : out STD_LOGIC);
+end leftshiftreg;
+
+architecture Behavioral of leftshiftreg is
+component dflipflop is
+Port ( d : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           op : out STD_LOGIC);
+end component;
+signal s0,s1,s2,s3,s4,s5,s6,s7:STD_LOGIC;           
+begin
+D1:dflipflop port map(input,clk,s0);
+D2:dflipflop port map(s0,clk,s1);
+D3:dflipflop port map(s1,clk,s2);
+D4:dflipflop port map(s2,clk,s3);
+D5:dflipflop port map(s3,clk,s4);
+D6:dflipflop port map(s4,clk,s5);
+D7:dflipflop port map(s5,clk,s6);
+D8:dflipflop port map(s6,clk,s7);
+output <= s7;
+end Behavioral;
+---------------------------------------------------------------------------------------------------------------------
+
+2) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity project_1 is
+    Port ( input : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 7));
+end project_1;
+
+architecture Behavioral of project_1 is
+signal re:STD_LOGIC_VECTOR(0 to 7);
+begin
+process(clk,reset)
+begin
+if(reset='1') then
+re <= "00000000";
+else
+if falling_edge(clk) then
+re(0) <= re(1);
+re(1) <= re(2);
+re(2) <= re(3);
+re(3) <= re(4);
+re(4) <= re(5);
+re(5) <= re(6);
+re(6) <= re(7);
+re(7) <= input;
+end if;
+end if;
+output <= re;
+end process;
+end Behavioral;
+------------------------------------------------------------------------------------------------------------------------
+
+3) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity eight_bit_shift_resistor is
+  Port (input,clk:in std_logic;
+        output:out std_logic_vector(7 downto 0));
+end eight_bit_shift_resistor;
+
+architecture structure of eight_bit_shift_resistor is
+component D_flip_flop is
+    port(D,clk:in std_logic;
+         Q:out std_logic);
+end component;
+signal s0,s1,s2,s3,s4,s5,s6:std_logic;
+begin
+u0:D_flip_flop port map(D => input, clk => clk, Q => s0);
+u1:D_flip_flop port map(D => s0, clk => clk, Q => s1);
+u2:D_flip_flop port map(D => s1, clk => clk, Q => s2);
+u3:D_flip_flop port map(D => s2, clk => clk, Q => s3);
+u4:D_flip_flop port map(D => s3, clk => clk, Q => s4);
+u5:D_flip_flop port map(D => s4, clk => clk, Q => s5);
+u6:D_flip_flop port map(D => s5, clk => clk, Q => s6);
+u7:D_flip_flop port map(D => s6, clk => clk, Q => output(7));
+output(0) <= s0;
+output(1) <= s1;
+output(2) <= s2;
+output(3) <= s3;
+output(4) <= s4;
+output(5) <= s5;
+output(6) <= s6;
+end structure;
+-------------------------------------------------------------------------------------------------------------------------
+
+4) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity new_2 is
+    Port ( input : in STD_LOGIC;
+           clk : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 15));
+end new_2;
+
+architecture Behavioral of new_2 is
+component sipo_leftreg is
+   Port ( inp : in STD_LOGIC;
+        clk : in STD_LOGIC;
+        opt : inout STD_LOGIC_VECTOR (0 to 7));
+end component;        
+signal rty:STD_LOGIC_VECTOR(0 to 15);
+begin
+G1:sipo_leftreg port map(input,clk,rty(8 to 15));
+G2:sipo_leftreg port map(rty(8),clk,rty(0 to 7));
+output <= rty;
+end Behavioral;

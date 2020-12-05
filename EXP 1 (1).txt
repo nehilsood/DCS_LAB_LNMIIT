@@ -1,0 +1,200 @@
+TASK 1-
+entity H_Adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           carry : out STD_LOGIC;
+           sum : out STD_LOGIC);
+end H_Adder;
+
+architecture Dataflow of H_Adder is
+
+begin
+sum <= a xor b;
+carry <= a and b;
+
+end Dataflow;
+------------------------------------------------------------------
+TASK 2-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity HA is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           carry : out STD_LOGIC);
+end HA;
+
+architecture Behavioral of HA is
+
+begin
+p1: process(a,b)
+begin
+if a = '1' then
+sum <= not b;
+carry <= b;
+
+else
+sum <= b;
+carry <= '0';
+
+end if;
+end process;
+end Behavioral;
+
+------------------------------------------------------------------------
+
+TASK 3-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity Full_Adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           c : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           c_out : out STD_LOGIC);
+end Full_Adder;
+
+architecture Dataflow of Full_Adder is
+
+begin
+
+sum <= a xor b xor c;
+c_out <= (a and b) or ((a xor b) and c);
+
+
+end Dataflow;
+
+-------------------------------------------------------------------------
+
+TASK 4- 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Full_Adder is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           c : in STD_LOGIC;
+           sum : out STD_LOGIC;
+           carry : out STD_LOGIC);
+end Full_Adder;
+
+architecture Behavioral of Full_Adder is
+
+begin
+process(a,b,c)
+begin
+
+if(a='0' and b='0' and c='0')then
+sum <='0';
+carry<='0';
+
+elsif( a='0' and b='0' and c='1')then
+sum <= '1';
+carry <= '0';
+
+elsif( a='0' and b='1' and c='0')then
+sum <= '1';
+carry <= '0';
+
+elsif( a='0' and b='1' and c='1')then
+sum <= '0';
+carry <='1';
+
+elsif( a='1' and b='0' and c='0')then
+sum <= '1';
+carry <= '0';
+  
+elsif( a='1' and b='0' and c='1')then
+sum <='0';
+carry <='1';
+
+elsif( a='1' and b='1' and c='0')then
+sum<='0';
+carry <= '1';
+
+else
+sum <= '1';
+carry <= '1';
+end if;
+end process;
+
+end Behavioral;
+
+-----------------------------------------------------------------
+
+TASK 5-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity HA is
+    Port ( HA_a,HA_b : in STD_LOGIC;
+           HA_sum,HA_carry : out STD_LOGIC);
+end HA;
+
+architecture Dataflow of HA is
+
+begin
+HA_sum <= HA_a xor HA_b;
+HA_carry <= HA_a and HA_b;
+
+end Dataflow;
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity or_gate is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           c : out STD_LOGIC);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+    c <= a or b;
+
+end dataflow;
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity FA_Structural is
+    Port ( FA_a : in STD_LOGIC;
+           FA_b : in STD_LOGIC;
+           FA_c : in STD_LOGIC;
+           FA_sum : out STD_LOGIC;
+           FA_carry : out STD_LOGIC);
+end FA_Structural;
+
+architecture Behavioral of FA_Structural is
+
+component HA is
+    Port ( HA_a,HA_b : in STD_LOGIC;
+       HA_sum,HA_carry : out STD_LOGIC);
+end component;
+
+component or_gate is
+    Port(a,b: in STD_LOGIC;
+         c: out STD_LOGIC);
+end component;
+
+signal s0,s1,s2 : std_logic;
+
+begin
+a1: HA port map(HA_a => FA_a, HA_b => FA_b, HA_sum => s0, HA_carry => s1);
+a2: HA port map(HA_a => s0 , HA_b => FA_c, HA_sum => FA_sum, HA_carry => s2);
+a3: or_gate port map(a => S2, b => s1, c => FA_carry);
+
+end Behavioral;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

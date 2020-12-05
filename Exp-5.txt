@@ -1,0 +1,175 @@
+1) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity two_four_decoder is
+    Port ( a : in STD_LOGIC_VECTOR (0 to 1);
+           en : in STD_LOGIC;
+           y : out STD_LOGIC_VECTOR (0 to 3));
+end two_four_decoder;
+
+architecture Behavioral of two_four_decoder is
+begin
+process(a,en)
+begin if en='1' then
+case a is 
+when "00" => y <= "0001";  
+when "01" => y <= "0010";
+when "10" => y <= "0100";
+when "11" => y <= "1000";
+when others => y<= "----";
+end case;
+else
+y <= "0000";
+end if;
+end process;
+end Behavioral;
+----------------------------------------------------------------------------------------------------------------------
+
+2)  library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity three_eight_decoder_dataflow is
+    Port ( a : in STD_LOGIC_VECTOR (0 to 2);
+           en : in STD_LOGIC;
+           y : out STD_LOGIC_VECTOR (0 to 7));
+end three_eight_decoder_dataflow;
+
+architecture Dataflow of three_eight_decoder_dataflow is
+
+begin
+y(7) <= en and (not a(0)) and (not a(1)) and (not a(2));
+y(6) <= en and (not a(0)) and (not a(1)) and a(2);
+y(5) <= en and (not a(0)) and a(1) and (not a(2));
+y(4) <= en and (not a(0)) and a(1) and a(2);
+y(3) <= en and a(0) and (not a(1)) and (not a(2));
+y(2) <= en and a(0) and (not a(1)) and a(2);
+y(1) <= en and a(0) and a(1) and (not a(2));
+y(0) <= en and a(0) and a(1) and a(2);
+end Dataflow;
+--------------------------------------------------------------------------------------------------------------
+
+3) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity three_to_eight_func is
+    Port ( a : in STD_LOGIC_VECTOR (0 to 2);
+           en : in STD_LOGIC;
+           op : out STD_LOGIC);
+end three_to_eight_func;
+
+architecture Structural of three_to_eight_func is
+component three_eight_decoder is
+Port(a: in STD_LOGIC_VECTOR(0 to 2);
+     en : in STD_LOGIC;
+     y : out STD_LOGIC_VECTOR(0 to 7));
+  end component;   
+ component or_gate is
+ Port(h : in STD_LOGIC;
+      i : in STD_LOGIC;
+      j : in STD_LOGIC;
+      k : in STD_LOGIC;
+      op_out : out STD_LOGIC);
+end component; 
+signal dc:STD_LOGIC_VECTOR(0 to 7);         
+begin
+TE:three_eight_decoder port map(a => a,en => en,y => dc);
+G2:or_gate port map(h => dc(1),i => dc(2),j => dc(5),k => dc(7),op_out => op);
+end Structural;
+--------------------------------------------------------------------------------------------------------------
+
+4) 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity gray_code_creation is
+    Port ( a : in STD_LOGIC_VECTOR (0 to 3);
+           op : out STD_LOGIC_VECTOR (0 to 3));
+end gray_code_creation;
+
+architecture dataflow of gray_code_creation is
+
+begin
+op(0) <= a(0);
+op(1) <= a(0) xor a(1);
+op(2) <= a(1) xor a(2);
+op(3) <= a(2) xor a(3);
+end dataflow;
+----------------------------------------------------------------------------------------------------------------------
+
+5) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity four_sixteen_decoder is
+    Port ( a : in STD_LOGIC_VECTOR (0 to 3);
+           en : in STD_LOGIC;
+           op : out STD_LOGIC_VECTOR (0 to 15));
+end four_sixteen_decoder;
+
+architecture Structural of four_sixteen_decoder is
+component two_four_decoder is
+port(a : in STD_LOGIC;
+     b : in STD_LOGIC;
+     en : in STD_LOGIC;
+     yout : out STD_LOGIC_VECTOR(0 to 3));
+end component;
+component combine is
+port(s2 : in STD_LOGIC_VECTOR(0 to 3);
+     s3 : in STD_LOGIC_VECTOR (0 to 3);
+     s4 : in STD_LOGIC_VECTOR (0 to 3);
+     s5 : in STD_LOGIC_VECTOR (0 to 3);
+     outp : out STD_LOGIC_VECTOR (0 to 15));
+end component;
+signal s1,s2,s3,s4,s5:STD_LOGIC_VECTOR(0 to 3);     
+begin
+TFD1:two_four_decoder port map(a => a(0),b => a(1),en => en,yout =>s1);
+TFD2:two_four_decoder port map(a => a(2),b => a(3),en => s1(0),yout => s2);
+TFD3:two_four_decoder port map(a => a(2),b => a(3),en => s1(1),yout => s3);
+TFD4:two_four_decoder port map(a => a(2),b => a(3),en => s1(2),yout => s4);
+TFD5:two_four_decoder port map(a => a(2),b => a(3),en => s1(3),yout => s5);
+O1:combine port map(s2 => s2,s3 => s3,s4 => s4,s5 => s5,outp => op);
+end Structural;  

@@ -1,0 +1,153 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+entity moree_non_overlapping_pattern is
+  Port (clk,reset,input: in std_logic;
+        output: out std_logic);
+end moree_non_overlapping_pattern;
+
+architecture Behavioral of moree_non_overlapping_pattern is
+type state_type is (s0,s1,s2,s3,s4);
+signal state_reg,state_next:state_type; 
+begin
+    process(clk,reset)
+    begin
+        if(reset ='1') then
+            state_reg <= s0;
+        elsif (clk'event and clk='1') then
+            state_reg <= state_next;
+        end if;
+    end process;
+    process(state_reg,input)
+    begin
+        case state_reg is
+            when s0 =>
+                if(input = '1') then
+                    state_next <= s1;
+                else
+                    state_next <= s0;
+                end if;
+            when s1 =>
+                if(input = '1') then
+                    state_next <= s2;
+                else
+                    state_next <= s0;
+                end if;
+            when s2 =>
+                if(input = '0') then
+                    state_next <= s3;
+                else
+                    state_next <= s2;
+                end if;
+            when s3 =>
+                if(input = '1') then
+                    state_next <= s4;
+                else
+                    state_next <= s0;
+                end if;
+            when s4 =>
+                if(input = '0') then
+                    state_next <= s0;
+                else 
+                    state_next <= s1;
+                end if;
+        end case;
+    end process;
+    process(state_reg)
+    begin
+        case state_reg is
+            when s0 =>
+                output <= '0' ;
+            when s1 =>
+                output <= '0';
+            when s2 =>
+                output <= '0';
+            when s3 =>
+                output <= '0';
+            when s4 =>
+                output <= '1';
+        end case;
+    end process;
+end Behavioral;
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity moree_overlapping_pattern is
+  Port (clk,reset,input: in std_logic;
+        output: out std_logic);
+end moree_overlapping_pattern;
+
+architecture Behavioral of moree_overlapping_pattern is
+type state_type is (s0,s1,s2,s3,s4);
+signal state_reg,state_next:state_type; 
+begin
+    process(clk,reset)
+    begin
+        if(reset ='1') then
+            state_reg <= s0;
+        elsif (clk'event and clk='1') then
+            state_reg <= state_next;
+        end if;
+    end process;
+    process(state_reg,input)
+    begin
+        case state_reg is
+            when s0 =>
+                if(input = '1') then
+                    state_next <= s1;
+                else
+                    state_next <= s0;
+                end if;
+            when s1 =>
+                if(input = '1') then
+                    state_next <= s2;
+                else
+                    state_next <= s0;
+                end if;
+            when s2 =>
+                if(input = '0') then
+                    state_next <= s3;
+                else
+                    state_next <= s2;
+                end if;
+            when s3 =>
+                if(input = '1') then
+                    state_next <= s4;
+                else
+                    state_next <= s0;
+                end if;
+            when s4 =>
+                if(input = '0') then
+                    state_next <= s0;
+                else 
+                    state_next <= s2;
+                end if;
+        end case;
+    end process;
+    process(state_reg)
+    begin
+        case state_reg is
+            when s0 =>
+                output <= '0' ;
+            when s1 =>
+                output <= '0';
+            when s2 =>
+                output <= '0';
+            when s3 =>
+                output <= '0';
+            when s4 =>
+                output <= '1';
+        end case;
+    end process;
+end Behavioral;

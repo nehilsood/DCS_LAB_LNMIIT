@@ -1,0 +1,214 @@
+1) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity D_Latch is
+    Port ( d : in STD_LOGIC;
+           en : in STD_LOGIC;
+           q : inout STD_LOGIC;
+           qbar : inout STD_LOGIC);
+end D_Latch;
+architecture Dataflow of D_Latch is
+signal f,h:STD_LOGIC;
+begin
+f <= d nand en;
+h <= (not d) nand en;
+q <= f nand qbar;
+qbar <= h nand q;
+end Dataflow;
+------------------------------------------------------------------------------------------------------------------------
+
+2) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+entity dflipflop is
+Port ( D : in STD_LOGIC;
+clk : in STD_LOGIC;
+Q : out STD_LOGIC;
+Qbar : out STD_LOGIC);
+end dflipflop;
+architecture Behavioral of dflipflop is
+begin
+process(clk)
+begin
+if(clk='1' and clk'event) then
+Q<=D;
+Qbar<=not D;
+end if;
+end process;
+end Behavioral;
+-------------------------------------------------------------------------------------------------------------------------
+
+3) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+entity jk_flip_flop is
+Port ( j : in STD_LOGIC;
+k : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qn : out STD_LOGIC);
+end jk_flip_flop;
+architecture Structural of jk_flip_flop is
+component srflipflop is
+Port ( s : in STD_LOGIC;
+r : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qbar : out STD_LOGIC);
+end component;
+signal ss,sr,sq,sqn:std_logic;
+begin
+sr<=k and sq;
+ss<=j and sqn;
+q<=sq;
+qn<=sqn;
+m1 : srflipflop port map(s=>ss,r=>sr,clock=>clock,q=>sq,qbar=>sqn);
+end Structural;
+----------------------------------------------------------------------------------------------------------------
+
+4) 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+entity srflipflop is
+Port ( s : in STD_LOGIC;
+r : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qbar : out STD_LOGIC);
+end srflipflop;
+architecture Behavioral of srflipflop is
+begin
+process(clock)
+variable tmp: std_logic;
+begin
+if (clock='1' and clock'event)then
+if(s='0' and r='0') then
+tmp:=tmp;
+elsif (s='1' and r='1') then
+tmp:='Z';
+elsif (s='0' and r='1') then
+tmp:='0';
+else
+tmp:='1';
+end if;
+end if;
+q<=tmp;
+qbar<= not tmp;
+end process;
+end Behavioral;
+
+----------------------------------------------------------------------------------------------------------------------
+
+5) 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity tflipflop is
+port( T: in std_logic;
+Clock: in std_logic;
+Q: out std_logic);
+end tflipflop;
+architecture Behavioral of tflipflop is
+signal tmp: std_logic;
+begin
+process (Clock)
+begin
+if (Clock'event and Clock='1') then
+if T='0' then
+tmp <= tmp;
+elsif T='1' then
+tmp <= not (tmp);
+end if;
+end if;
+end process;
+Q <= tmp;
+end Behavioral;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

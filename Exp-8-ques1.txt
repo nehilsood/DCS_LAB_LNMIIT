@@ -1,0 +1,73 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity moore_machine is
+  Port (clk,reset,count:in std_logic;
+        y:out std_logic_vector(0 to 1));
+end moore_machine;
+
+architecture Behavioral of moore_machine is
+type state_type is (s0,s1,s2,s3);
+
+signal state_reg,state_next:state_type;
+begin
+    process(clk,reset)
+    begin
+        if (reset ='1') then    
+            state_reg <= s0;
+        elsif (clk'event and clk = '1') then
+            state_reg <= state_next;
+        end if;
+    end process;
+    process(state_reg,count)
+    begin
+        case state_reg is
+            when s0 =>
+                if (count ='0')then
+                    state_next <= s1;
+                else
+                    state_next <= s3;
+                end if;
+            when s1 =>
+                if ( count ='0') then
+                    state_next <= s2;
+                else
+                    state_next <= s0;
+                end if;
+            when s2 =>
+                if (count ='0') then
+                    state_next <= s3;
+                else
+                    state_next <= s1;
+                end if;
+            when s3 =>
+                if(count = '0') then
+                    state_next <= s0;
+                else
+                    state_next <= s2;
+                end if;
+         end case;
+    end process;
+    process(state_reg)
+    begin
+        case state_reg is
+            when s0 =>
+                y <= "00";
+            when s1 =>
+                y <= "01";
+            when s2 =>
+                y <= "10";
+            when s3 =>
+                y <= "11";
+        end case;
+    end process;
+end Behavioral;

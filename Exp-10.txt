@@ -1,0 +1,80 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity traffic_light is
+  Port (clk,clr:in std_logic;
+        lights:out std_logic_vector (0 to 5));
+end traffic_light;
+
+architecture Behavioral of traffic_light is
+type state is (s0,s1,s2,s3,s4,s5);
+signal state_reg: state;
+signal count: std_logic_vector (0 to 3) ;
+begin
+    process(clk,clr)
+    begin
+        if(clr = '1') then
+            state_reg <= s0;
+            count <= "0000";
+        elsif (clk'event and clk= '1') then
+            case state_reg is
+                when s0 =>
+                    if(count = 15 ) then
+                        state_reg <= s1;
+                        count <= "0000";
+                    else
+                        state_reg <= s0;
+                        count <= count+1;
+                        lights <= "001100";
+                    end if;
+                when s1 =>
+                    if( count = 3) then
+                        state_reg <= s2;
+                        count <= "0000";
+                    else
+                        state_reg <= s1;
+                        count <= count+1;
+                        lights <= "010100";
+                    end if;
+                when s2 =>
+                    if(count =3) then
+                        state_reg <= s3;
+                        count <= "0000";
+                    else
+                        state_reg <= s2;
+                        count <= count+1;
+                        lights <= "100100";
+                    end if;
+                when s3 =>
+                    if(count =15) then
+                        state_reg <= s4;
+                        count <= "0000";
+                    else
+                        state_reg <= s3;
+                        count <= count+1;
+                        lights <= "100001";
+                    end if;
+                when s4 =>
+                    if(count =3) then
+                        state_reg <= s5;
+                        count <= "0000";
+                    else
+                        state_reg <= s4;
+                        count <= count+1;
+                        lights <= "100010";
+                    end if;
+                when s5 =>
+                    if(count =3) then
+                        state_reg <= s0;
+                        count <= "0000";
+                    else
+                        state_reg <= s5;
+                        count <= count+1;
+                        lights <= "100100";
+                    end if;
+            end case;
+        end if;
+    end process;
+end Behavioral;

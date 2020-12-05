@@ -1,0 +1,224 @@
+TASK 1-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity or_gate is
+    Port ( a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           c : out STD_LOGIC);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+    c <= a or b;
+
+end dataflow;
+
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity TASK1 is
+Port ( x0 : in STD_LOGIC;
+           x1 : in STD_LOGIC;
+           x2 : in STD_LOGIC;
+           x3 : in STD_LOGIC;
+           x4 : in STD_LOGIC;
+           x5 : in STD_LOGIC;
+           x6 : in STD_LOGIC;
+           x7 : in STD_LOGIC;
+           x8 : in STD_LOGIC;
+           x9 : in STD_LOGIC;
+           sum : out STD_LOGIC);
+end TASK1;
+
+architecture Stages_of_orgate of TASK1 is
+
+component or_gate is
+    Port(a,b: in STD_LOGIC;
+         c: out STD_LOGIC);
+end component;
+signal s1,s2,s3,s4,s5,s6,s7,s8 :std_logic;
+
+begin
+lab1: or_gate port map(a => x0, b => x1, c => s1);
+lab2: or_gate port map(a => s1, b => x2, c => s2);
+lab3: or_gate port map(a => s2, b => x3, c => s3);
+lab4: or_gate port map(a => s3, b => x4, c => s4);
+lab5: or_gate port map(a => s4, b => x5, c => s5);
+lab6: or_gate port map(a => s5, b => x6, c => s6);
+lab7: or_gate port map(a => s6, b => x7, c => s7);
+lab8: or_gate port map(a => s7, b => x8, c => s8);
+lab9: or_gate port map(a => s8, b => x9, c => sum);
+
+
+
+end Stages_of_orgate;
+
+--------------------------------------------------------------------------------
+
+TASK 2-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity or_gate is 
+    Port(a,b,c,d : in std_logic;
+         s : out std_logic);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+s <= a or b or c or d ;
+end dataflow;         
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Task_2 is
+    Port ( x0 : in STD_LOGIC;
+           x1 : in STD_LOGIC;
+           x2 : in STD_LOGIC;
+           x3 : in STD_LOGIC;
+           x4 : in STD_LOGIC;
+           x5 : in STD_LOGIC;
+           x6 : in STD_LOGIC;
+           x7 : in STD_LOGIC;
+           x8 : in STD_LOGIC;
+           x9 : in STD_LOGIC;
+           sum : out STD_LOGIC);
+end Task_2;
+
+architecture OR_gates of Task_2 is
+
+component or_gate is 
+
+port( a,b,c,d : in std_logic;
+      s : out std_logic);
+      
+end component;
+
+signal s0,s1: std_logic;
+begin
+
+lab1: or_gate port map(a => x0, b=> x1, c=> x2, d=>x3, s=> s0);
+lab2: or_gate port map(a => x4, b=> x5, c=> x6, d=>x7, s=> s1);
+lab3: or_gate port map(a => x8, b=> x9, c=> s0, d=>s1, s=> sum);
+
+end OR_gates;
+--------------------------------------------------------------------------
+
+TASK 3-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity or_gate is 
+    Port(a,b,c,d : in std_logic;
+         s : out std_logic);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+s <= a or b or c or d ;
+end dataflow;         
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Task3 is
+    Port ( x0 : in STD_LOGIC;
+           x1 : in STD_LOGIC;
+           x2 : in STD_LOGIC;
+           x3 : in STD_LOGIC;
+           x4 : in STD_LOGIC;
+           x5 : in STD_LOGIC;
+           x6 : in STD_LOGIC;
+           x7 : in STD_LOGIC;
+           x8 : in STD_LOGIC;
+           x9 : in STD_LOGIC;
+           sum : out STD_LOGIC);
+end Task3;
+
+architecture Or_gates of Task3 is
+component or_gate is 
+
+port( a,b,c,d : in std_logic;
+      s : out std_logic);
+      
+end component;
+
+signal s0,s1: std_logic;
+begin
+
+lab1: or_gate port map(a => x0, b=> x1, c=> x2, d=>x3, s=> s0);
+lab2: or_gate port map(a => s0, b=> x4, c=> x5, d=>x6, s=> s1);
+lab3: or_gate port map(a => s1, b=> x7, c=> x8 , d=> x9, s=> sum);
+
+
+
+
+end Or_gates;
+
+-----------------------------------------------------------------------------------------
+
+TASK 4-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity or_gate is 
+    Port(a,b : in std_logic;
+         s : out std_logic);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+s <= a or b ;
+end dataflow;         
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Task4 is
+    Port ( x0 : in STD_LOGIC;
+           x1 : in STD_LOGIC;
+           x2 : in STD_LOGIC;
+           x3 : in STD_LOGIC;
+           x4 : in STD_LOGIC;
+           x5 : in STD_LOGIC;
+           x6 : in STD_LOGIC;
+           x7 : in STD_LOGIC;
+           x8 : in STD_LOGIC;
+           x9 : in STD_LOGIC;
+           sum : out STD_LOGIC);
+end Task4;
+
+architecture OR_gates of Task4 is
+component or_gate is 
+
+port( a,b: in std_logic;
+      s : out std_logic);
+      
+end component;
+
+signal s0,s1,s2,s3,s4,s5, s6, s7: std_logic;
+
+begin
+lab1: or_gate port map(a=>x0, b=>x1, s=> s0);
+lab2: or_gate port map(a=>x2, b=>x3, s=> s1);
+lab3: or_gate port map(a=>x4, b=>x5, s=> s2);
+lab4: or_gate port map(a=>x6, b=>x7, s=> s3);
+lab5: or_gate port map(a=>x8, b=>x9, s=> s4);
+lab6: or_gate port map(a=>s0, b=>s1, s=> s5);
+lab7: or_gate port map(a=>s2, b=>s3, s=> s6);
+lab8: or_gate port map(a=>s5, b=>s6, s=> s7);
+lab9: or_gate port map(a=>s4, b=>s7, s=> sum);
+end OR_gates;
+
+----------------------------------------------------------------------------------------------------------------

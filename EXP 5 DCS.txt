@@ -1,0 +1,185 @@
+TASK 1-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+ 
+entity decoder is
+port(
+a : in STD_LOGIC_VECTOR(1 downto 0);
+b : out STD_LOGIC_VECTOR(3 downto 0)
+);
+end decoder;
+architecture bhv of decoder is
+begin
+ 
+process(a)
+begin
+case a is
+when "00" => b <= "0001"; when "01" => b <= "0010"; when "10" => b <= "0100"; when "11" => b <= "1000";
+end case;
+end process;
+ 
+end bhv;
+
+TASK 2-
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity deco3x8_seq is
+  
+  port (
+    ip : in  std_logic_vector(2 downto 0);   -- input
+    op : out std_logic_vector(7 downto 0));  -- output
+
+end deco3x8_seq;
+
+architecture beh of deco3x8_seq is
+
+begin  -- beh
+
+deco : process (ip)
+  variable temp : std_logic_vector(7 downto 0);
+  begin
+    case ip is
+      when "000" => temp := "00000001";
+      when "001" => temp := "00000010";
+      when "010" => temp := "00000100";
+      when "011" => temp := "00001000";
+      when "100" => temp := "00010000";
+      when "101" => temp := "00100000";
+      when "110" => temp := "01000000";
+      when "111" => temp := "10000000";
+      when others => temp := "XXXXXXXX";
+    end case;
+    op <= temp;
+ end process deco;
+end beh;
+
+TASK 3-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity three_to_eight_decoder is
+  Port (en:in std_logic;
+        a:in std_logic_vector(0 to 2);
+        y:out std_logic_vector(0 to 7));
+end three_to_eight_decoder;
+
+architecture dataflow of three_to_eight_decoder is
+begin
+y(0) <= (not a(0))and(not a(1))and(not a(2))and en;
+y(1) <= (not a(0))and(not a(1))and a(2) and en;
+y(2) <= (not a(0))and a(1) and(not a(2))and en;
+y(3) <= (not a(0))and a(1) and a(2) and en;
+y(4) <= a(0) and(not a(1))and(not a(2))and en;
+y(5) <= a(0) and(not a(1))and a(2) and en;
+y(6) <= a(0) and a(1) and(not a(2)) and en;
+y(7) <= a(0) and a(1) and a(2) and en;
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity or_gate is
+    port(a,b,c,d:in std_logic;
+         c_out:out std_logic);
+end or_gate;
+
+architecture dataflow of or_gate is
+begin
+    c_out <= a or b or c or d;
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity decoder is
+  Port (ain:in std_logic_vector(0 to 2);
+        enin:in std_logic;
+        yout:out std_logic);
+end decoder;
+
+architecture structure of decoder is
+component three_to_eight_decoder is
+    port(en:in std_logic;
+        a:in std_logic_vector(0 to 2);
+        y:out std_logic_vector(0 to 7));
+end component;
+component or_gate is
+    port(a,b,c,d:in std_logic;
+         c_out:out std_logic);
+end component;
+signal s:std_logic_vector(0 to 7);
+begin
+u0:three_to_eight_decoder port map(a(0) => ain(0),a(1) => ain(1),a(2) => ain(2),en => enin,y(0) => s(0),y(1) => s(1),y(2) => s(2),y(3) => s(3),y(4) => s(4),y(5) => s(5),y(6) => s(6),y(7) => s(7));
+u1:or_gate port map(a => s(1),b => s(2),c => s(5),d => s(7),c_out => yout);
+end structure;
+
+TASK 4-
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+entity bin2gray is
+port(   bin : in std_logic_vector(3 downto 0);  --binary input
+        G : out std_logic_vector(3 downto 0)  --gray code output
+        );
+end bin2gray;
+
+architecture gate_level of bin2gray is 
+
+begin
+
+--xor gates.
+G(3) <= bin(3);
+G(2) <= bin(3) xor bin(2);
+G(1) <= bin(2) xor bin(1);
+G(0) <= bin(1) xor bin(0);
+
+end;
+
+
+TASK 5-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity two_to_four_decoder is
+  Port (a:in std_logic_vector (0 to 1);
+        en: in std_logic;
+        y: out std_logic_vector(0 to 3));
+end two_to_four_decoder;
+
+architecture dataflow of two_to_four_decoder is
+begin
+    y(0) <= (not a(0))and(not a(1))and en;
+    y(1) <= (not a(0))and a(1) and en;
+    y(2) <= a(0) and(not a(1))and en;
+    y(3) <= a(0) and a(1) and en;
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity four_to_sixteen_decoder is
+  Port (ain:in std_logic_vector(0 to 3);
+        enin:in std_logic;
+        yout:out std_logic_vector(0 to 15));
+end four_to_sixteen_decoder;
+
+architecture structural of four_to_sixteen_decoder is
+component two_to_four_decoder is
+    port(a:in std_logic_vector (0 to 1);
+        en: in std_logic;
+        y: out std_logic_vector(0 to 3));
+end component;
+signal s:std_logic_vector(0 to 3);
+begin
+u0:two_to_four_decoder port map(a(0) => ain(0),a(1) => ain(1),en => enin,y(0) => s(0),y(1) => s(1),y(2) => s(2),y(3) => s(3));
+u1:two_to_four_decoder port map(a(0) => ain(2),a(1) => ain(3),en => s(0),y(0) => yout(0),y(1) => yout(1),y(2) => yout(2),y(3) => yout(3));
+u2:two_to_four_decoder port map(a(0) => ain(2),a(1) => ain(3),en => s(1),y(0) => yout(4),y(1) => yout(5),y(2) => yout(6),y(3) => yout(7));
+u3:two_to_four_decoder port map(a(0) => ain(2),a(1) => ain(3),en => s(2),y(0) => yout(8),y(1) => yout(9),y(2) => yout(10),y(3) => yout(11));
+u4:two_to_four_decoder port map(a(0) => ain(2),a(1) => ain(3),en => s(3),y(0) => yout(12),y(1) => yout(13),y(2) => yout(14),y(3) => yout(15));
+end structural;

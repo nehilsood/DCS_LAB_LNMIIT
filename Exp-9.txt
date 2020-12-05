@@ -1,0 +1,139 @@
+1)  library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity test1 is
+    Port ( input : in STD_LOGIC_VECTOR (0 to 3);
+           clk : in STD_LOGIC;
+           clr : in STD_LOGIC;
+           ld : in STD_LOGIC;
+           cnt : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 3);
+           tc : out STD_LOGIC);
+end test1;
+
+architecture Behavioral of test1 is
+signal s:STD_LOGIC_VECTOR(0 to 3);
+begin
+process(clk,ld,cnt,clr)
+begin
+if(clk='1' and clk'event) then
+   tc <= '0';
+   if(clr='1') then
+      s <= "0000";
+   elsif(ld='1') then
+      s <= input;
+   elsif(cnt ='1' and ld='0') then
+      s <= s+1;
+      if(s="1111") then
+          tc <= '1'; 
+      end if;
+   else
+      s <= s;
+   end if;
+   end if;
+   output <= s;
+end process;
+end Behavioral;
+-----------------------------------------------------------------------------------------------------------------------
+
+2) library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity modulo16counter is
+    Port ( input : in STD_LOGIC_VECTOR (0 to 3);
+           clk : in STD_LOGIC;
+           clr : in STD_LOGIC;
+           cnt : in STD_LOGIC;
+           ld : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 3);
+           tc : out STD_LOGIC);
+end modulo16counter;
+
+architecture Behavioral of modulo16counter is
+signal s1:STD_LOGIC_VECTOR(0 to 3);
+begin
+process(clk,cnt,clr,ld)
+begin
+if(clk='1' and clk'event) then
+tc <= '0';
+if(clr='1') then
+s1 <= "0000";
+elsif(ld='1') then
+s1 <= input;
+elsif(cnt='1' and ld='0') then
+s1 <= s1 + 1;
+if(s1 = "1111") then
+tc <= '1';
+end if;
+else
+s1 <= s1;
+end if;
+end if;
+output <= s1;
+end process;
+end Behavioral;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity test2 is
+    Port ( input : in STD_LOGIC_VECTOR (0 to 3);
+           clk : in STD_LOGIC;
+           clr : in STD_LOGIC;
+           cnt : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 3);
+           tc : out STD_LOGIC);
+end test2;
+
+architecture Behavioral of test2 is
+component modulo16counter is
+Port ( input : in STD_LOGIC_VECTOR (0 to 3);
+           clk : in STD_LOGIC;
+           clr : in STD_LOGIC;
+           cnt : in STD_LOGIC;
+           ld : in STD_LOGIC;
+           output : out STD_LOGIC_VECTOR (0 to 3);
+           tc : out STD_LOGIC);
+end component;
+signal tmp,tmp1:STD_LOGIC;
+signal s:STD_LOGIC_VECTOR(0 to 3);           
+begin
+process(clr,s)
+begin
+tmp1 <= '0';
+if(clr='1') then
+tmp <= '1';
+else
+tmp <= s(0) and s(1);
+end if;
+end process;
+chip1: modulo16counter port map(input,clk,tmp1,cnt,tmp,s,tc);
+output <= s;
+end Behavioral;

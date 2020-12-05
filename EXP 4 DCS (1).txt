@@ -1,0 +1,107 @@
+TASK 1-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity fulladder is
+    port(FA_a,FA_b,cin: in std_logic;
+         FA_sum,FA_carry: out std_logic);
+end fulladder;
+
+architecture dataflow of fulladder is
+begin
+    FA_sum <= (FA_a xor FA_b) xor cin;
+    FA_carry <= (FA_a and FA_b) or (cin and (FA_a xor FA_b));
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity four_bit_adder is
+Port (in_x,in_y: in std_logic_vector(0 to 3);
+        answer: out std_logic_vector(0 to 4) );
+end four_bit_adder;
+
+architecture Structural of four_bit_adder is
+
+component fulladder is 
+    port(FA_a,FA_b,cin: in std_logic;
+         FA_sum,FA_carry: out std_logic);
+end component;
+signal s0,s1,s2:std_logic;
+
+begin
+   u1:fulladder port map(FA_a => in_x(3),FA_b => in_y(3), cin => '0', FA_sum => answer(4), FA_carry => s0);
+   u2:fulladder port map(FA_a => in_x(2), FA_b => in_y(2), cin => s0, FA_sum => answer(3), FA_carry => s1);
+   u3:fulladder port map(FA_a => in_x(1), FA_b => in_y(1), cin => s1, FA_sum => answer(2), FA_carry => s2);
+   u4:fulladder port map(FA_a => in_x(0),FA_b => in_y(0), cin => s2, FA_sum => answer(1), FA_carry => answer(0));
+
+end Structural;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+TASK 2-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity fulladder is
+    port(FA_a,FA_b,cin: in std_logic;
+         FA_sum,FA_carry: out std_logic);
+end fulladder;
+
+architecture dataflow of fulladder is
+begin
+    FA_sum <= (FA_a xor FA_b) xor cin;
+    FA_carry <= (FA_a and FA_b) or (cin and (FA_a xor FA_b));
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity x_or is
+    port(a,b: in std_logic;
+         c_out: out std_logic);
+end x_or;
+
+architecture dataflow of x_or is
+begin
+    c_out <= a xor b;
+end dataflow;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity four_bit_adder is
+Port (in_x,in_y: in std_logic_vector(0 to 3);
+        M: in std_logic;
+        answer: out std_logic_vector(0 to 4));
+end four_bit_adder;
+
+architecture structural of four_bit_adder is
+
+component fulladder is
+    port(FA_a,FA_b,cin: in std_logic;
+         FA_sum,FA_carry: out std_logic);
+end component;
+
+component x_or is
+    port(a,b: in std_logic;
+         c_out: out std_logic);
+end component;
+
+signal s0,s1,s2,s3,s4,s5,s6,s7:std_logic;
+begin
+    u1:x_or port map(a => in_y(3), b => M , c_out => s0);
+    u2:fulladder port map(FA_a => in_x(3), FA_b => s0, cin => M, FA_sum => answer(4), FA_carry => s1);
+    u3:x_or port map(a => in_y(2),b => M,c_out => s2);
+    u4:fulladder port map(FA_a => in_x(2), FA_b => s2, cin => s1, FA_sum => answer(3), FA_carry => s3);
+    u5:x_or port map(a => in_y(1),b => m,c_out => s4);
+    u6:fulladder port map(FA_a => in_x(1), FA_b => s4, cin => s3, FA_sum => answer(2), FA_carry => s5);
+    u7:x_or port map(a => in_y(0),b => m,c_out =>s6);
+    u8:fulladder port map(FA_a => in_x(0), FA_b => s6, cin => s5, FA_sum => answer(1), FA_carry => s7);
+    u9:x_or port map(a => s7,b => s5,c_out => answer(0));
+end structural;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

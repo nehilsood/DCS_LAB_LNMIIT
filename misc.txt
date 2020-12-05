@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+ENTITY my_logic IS
+PORT (din : STD_LOGIC_VECTOR(7 DOWNTO 0);
+             Count : STD_LOGIC_VECTOR(3 DOWNTO 0));
+END my_logic;
+ARCHITECTURE behavior OF my_logic IS
+BEGIN
+Count <= “0000”
+PROCESS(din)
+BEGIN
+L1: FOR i IN 0 TO 7 LOOP
+IF(din(i) = ‘1’) THEN
+Count = count+1;
+ELSE
+NEXT L1;
+END LOOP;
+END PROCESS;
+END behavior;
+
+
+---------------------------------------------------------------------
+
+ENTITY my_logic IS
+PORT (din : STD_LOGIC_VECTOR(7 DOWNTO 0);
+             Count : STD_LOGIC_VECTOR(3 DOWNTO 0));
+END my_logic;
+ARCHITECTURE behavior OF my_logic IS
+BEGIN
+Count <= “0000”
+PROCESS(din)
+BEGIN
+L1: FOR i IN 0 TO 7 LOOP
+IF(din(i) = ‘1’) THEN
+Count = count+1;
+ELSE
+NEXT L1;
+END LOOP;
+END PROCESS;
+END behavior;

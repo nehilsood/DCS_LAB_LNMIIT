@@ -1,0 +1,618 @@
+EXP 10:- (Traffic Light Controller using state Machines)
+
+library IEEE;
+use IEEE.std_logic_unsigned.ALL;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity traffic is
+port  ( clk : in std_logic ;
+        clr : in std_logic ;
+        light : out std_logic_vector( 5 downto 0));
+
+
+end traffic;
+
+architecture behave of traffic is
+type state_type is (s0,s1,s2,s3,s4,s5);
+signal state : state_type;
+signal count : std_logic_vector (3 downto 0);
+constant sec5 : std_logic_vector (3 downto 0) := "1111" ;
+constant sec1 : std_logic_vector (3 downto 0) := "0011" ;
+begin
+
+process (clk , clr) 
+begin
+if clr = '1' then
+  state <= s0;
+  count <= "0000" ;
+  
+elsif clk'event and clk ='1' then
+case state is
+when s0 =>
+        if count < sec5 then
+          state <= s0;
+         count <= count + 1 ;
+         
+        else
+        state <= s1; 
+         count <= "0000";
+         
+     end if;    
+          
+when s1 =>
+             if count < sec1 then
+               state <= s1;
+              count <= count + 1 ;
+              
+             else
+             state <= s2; 
+              count <= "0000";
+              
+          end if;          
+           
+ when s2 =>
+                       if count < sec1 then
+                         state <= s2;
+                        count <= count + 1 ;
+                        
+                       else
+                       state <= s3; 
+                        count <= "0000";
+                        
+                    end if;        
+         
+              
+          when s3 =>
+                                if count < sec5 then
+                                  state <= s3;
+                                 count <= count + 1 ;
+                                 
+                                else
+                                state <= s4; 
+                                 count <= "0000";
+                                 
+                             end if;            
+
+      when s4 =>
+                       if count < sec1 then
+                         state <= s4;
+                        count <= count + 1 ;
+                        
+                       else
+                       state <= s5; 
+                        count <= "0000";
+                        
+                    end if; 
+                    
+              when others =>
+                            state <= s0;
+           end case ;
+           end if ;
+           end process ;
+                                  
+ process (state)
+begin 
+case state is 
+       when s0 => light <= "100001";
+       when s1 => light <= "100010";
+       when s2 => light <= "100100";
+       when s3 => light <= "001100";
+       when s4 => light <= "010100";
+       when s5 => light <= "100100";
+   end case ;
+   end process ;
+   
+end behave;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 9:- (Counters and its applications)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity modulo16counter is
+Port ( input : in std_logic_vector (0 to 3);
+CLK,CLR,CNT,LD: in std_logic;
+output: out std_logic_vector (0 to 3);
+TC: out std_logic);
+end modulo16counter;
+architecture Behavioral of modulo16counter is
+signal s: std_logic_vector (0 to 3);
+begin
+    process (CLK, CLR,LD,CNT)
+    begin
+        if  CLK'event and CLK = '1' then
+            TC <= '0';
+            if CLR = '1' then
+                s <= "0000";
+            elsif LD = '1' then
+                s <= input;
+            elsif (CNT ='1' and LD='0') then
+                s <= s+1;
+                if s ="1111" then
+                    TC <= '1';
+                end if;
+            else
+                s <= s;
+            end if;
+         end if;
+         output <= s;
+    end process;
+end Behavioral;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity answer is
+Port ( input : in std_logic_vector (0 to 3);
+CLK,CLR,CNT: in std_logic;
+output: out std_logic_vector (0 to 3);
+TC : out std_logic);
+end answer;
+architecture Behavioral of answer is
+component modulo16counter is
+Port (input : in std_logic_vector (0 to 3);
+CLK,CLR,CNT,LD: in std_logic;
+output: out std_logic_vector (0 to 3);
+TC : out std_logic);
+end component;
+signal s: std_logic_vector (0 to 3);
+signal LD,reset:std_logic;
+begin
+process (CLR,s)
+begin
+reset <= '0';
+if CLR='1' then
+LD <= '1';
+else
+LD <= s(0) and s(1);
+end if;
+end process;
+chip1 : modulo16counter port map ( input, CLK, reset , CNT, LD, s, TC);
+output <= s;
+end Behavioral;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 8:- (Sequential system design using state Machines)
+(A)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity updowncounter is
+Port( clk: in STD_LOGIC;
+reset: in STD_LOGIC;
+input: in STD_LOGIC;
+output: out STD_LOGIC_VECTOR(1 downto 0));
+end updowncounter;
+architecture behavioral of updowncounter is
+type state_type is (s0,s1,s2,s3);
+signal state :state_type;
+begin
+process(clk, reset,input)
+begin
+if(reset='1') then
+state<=s0;
+elsif(rising_edge(clk)) then
+case state is
+when s0=>
+if input='0' then
+state<=s1;
+else
+state<=s3;
+end if;
+when s1=>
+if input='0' then
+state<=s2;
+else
+state<=s0;
+end if;
+when s2=>
+if input='0' then
+state<=s3;
+else
+state<=s1;
+end if;
+when s3=>
+if input='0' then
+state<=s0;
+else
+state<=s2;
+end if;
+end case;
+end if;
+end process;
+process(state)
+begin
+case state is
+when s0=>
+output<="00";
+when s1=>
+output<="01";
+when s2=>
+output<="10";
+when s3=>
+output<="11";
+end case;
+end process;
+end behavioral;
+
+(B)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity pattern_matching is
+Port( clk: in STD_LOGIC;
+reset: in STD_LOGIC;
+input: in STD_LOGIC;
+output: out STD_LOGIC);
+end pattern_matching;
+architecture behavioral of pattern_matching is
+type state_type is (s0,s1,s2,s3);
+signal state :state_type;
+begin
+process(clk,reset,input)
+begin
+if(reset='1') then
+state<=s0;
+elsif(rising_edge(clk)) then
+case state is
+when s0=>
+if input='0' then
+state<=s0;
+output<='0';
+else
+output<='0';
+state<=s1;
+end if;
+when s1=>
+if input='0' then
+state<=s0;
+output<='0';
+else
+output<='0';
+state<=s2;
+end if;
+when s2=>
+if input='0' then
+state<=s3;
+output<='0';
+else
+output<='0';
+state<=s2;
+end if;
+when s3=>
+if input='0' then
+state<=s0;
+output<='0';
+else
+output<='1';
+state<=s1;
+end if;
+end case;
+end if;
+end process;
+end behavioral;
+
+(C)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity pattern is
+port( clk : in std_logic;
+input : in std_logic;
+output : out std_logic );
+end pattern;
+architecture Behavioral of pattern is
+type state_type is (s0,s1,s2,s3);
+signal state : state_type := s0;
+begin
+process(clk)
+begin
+if ( clk' event and clk='1' ) then
+case state is
+when s0 =>
+output <= '0';
+if ( input = '0' ) then
+state <= s0;
+else
+state <= s1;
+end if;
+when s1 =>
+if ( input = '1' ) then
+state <= s2;
+output<='0';
+else
+state <= s0;
+output<='0';
+end if;
+when s2 =>
+if ( input = '0' ) then
+state <= s3;
+output<='0';
+else
+state <= s2;
+output<='0';
+end if;
+when s3 =>
+if ( input = '0' ) then
+state <= s0;
+output<='0';
+else
+output <= '1';
+state <= s1;
+end if;
+end case;
+end if;
+end process;
+end Behavioral;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 7:- (Shift Register Design Using VHDL)
+(A)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity shiftleftreg is
+Port ( sin : in STD_LOGIC;
+clk : in STD_LOGIC;
+so : out STD_LOGIC);
+end shiftleftreg;
+architecture Behavioral of shiftleftreg is
+component dff is
+PORT( D,CLOCK: in std_logic;
+Q: out std_logic);
+end component;
+signal o1,o2,o3,o4,o5,o6,o7 : std_logic;
+begin
+d1: dff port map(sin,clk,o1);
+d2: dff port map(o1,clk,o2);
+d3: dff port map(o2,clk,o3);
+d4: dff port map(o3,clk,o4);
+d5: dff port map(o4,clk,o5);
+d6: dff port map(o5,clk,o6);
+d7: dff port map(o6,clk,o7);
+d8:dff port map(o7,clk,so);
+end Behavioral;
+
+(B)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity q2 is
+Port ( clk : in STD_LOGIC;
+rst : in STD_LOGIC;
+d : in STD_LOGIC;
+q : out STD_LOGIC);
+end q2;
+architecture Behavioral of q2 is
+signal re : std_logic_vector(7 downto 0);
+begin
+process(clk,rst)
+begin
+if(rst='1') then
+re(7)<='0';
+re(6)<='0';
+re(5)<='0';
+re(4)<='0';
+re(3)<='0';
+re(2)<='0';
+re(1)<='0';
+re(0)<='0';
+else
+if(clk'event AND clk='1') then
+re(7)<=d;
+re(6)<=re(7);
+re(5)<=re(6);
+re(4)<=re(5);
+re(3)<=re(4);
+re(2)<=re(3);
+re(1)<=re(2);
+re(0)<=re(1);
+end if;
+end if;
+q<=re(0);
+end process;
+end Behavioral;
+
+(C)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity q3 is
+Port ( c : in STD_LOGIC;
+sin : in STD_LOGIC;
+po : out STD_LOGIC_VECTOR (7 downto 0));
+end q3;
+architecture Behavioral of q3 is
+signal tmp : std_logic_vector ( 7 downto 0);
+begin
+process(c)
+begin
+if(c'event and c='1') then
+for i in 0 to 6 loop
+tmp(i+1)<= tmp(i);
+end loop;
+tmp(0) <= sin;
+end if;
+end process;
+po<=tmp;
+end Behavioral;
+
+(D)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity q4 is
+Port ( input : in STD_LOGIC;
+clk : in STD_LOGIC;
+z : inout STD_LOGIC_VECTOR (15 downto 0));
+end q4;
+architecture Behavioral of q4 is
+signal output:std_logic_vector(15 downto 0);
+component q3 is
+Port ( c : in STD_LOGIC;
+sin : in STD_LOGIC;
+po : out STD_LOGIC_VECTOR (7 downto 0));
+end component;
+begin
+chip1:q3 port map(clk,input,output(15 downto 8));
+chip2:q3 port map(clk,output(8),output(7 downto 0));
+z<=output;
+end Behavioral;
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 6:- (Design D latch, JK flip flop, RS flip flop and T flip flop using behavioral and structural modeling.)
+
+A. Write a VHDL code for synchronous D latch using dataflow modeling.
+B. Write a VHDL code for synchronous D flip flop using behavioral
+modeling.
+C. Write a VHDL code for synchronous JK flip flop using structural
+modeling.
+D. Write a VHDL code for synchronous RS flip flop using behavioral
+modeling.
+E. Write a VHDL code for synchronous T flip flop using behavioral
+modeling.
+
+(A)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity dlatch is
+Port ( d : in STD_LOGIC;
+en : in STD_LOGIC;
+q: out STD_LOGIC;
+qn : out STD_LOGIC);
+end dlatch;
+architecture Behavioral of dlatch is
+begin
+process(d,en)
+begin
+if en='1' then
+q<=d;
+qn<= not d;
+end if;
+end process;
+end Behavioral;
+
+(B)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity dflipflop is
+Port ( D : in STD_LOGIC;
+clk : in STD_LOGIC;
+Q : out STD_LOGIC;
+Qbar : out STD_LOGIC);
+end dflipflop;
+architecture Behavioral of dflipflop is
+begin
+process(clk)
+begin
+if(clk='1' and clk'event) then
+Q<=D;
+Qbar<=not D;
+end if;
+end process;
+end Behavioral;
+
+(C)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity srflipflop is
+Port ( s : in STD_LOGIC;
+r : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qbar : out STD_LOGIC);
+end srflipflop;
+architecture Behavioral of srflipflop is
+begin
+process(clock)
+variable tmp: std_logic;
+begin
+if (clock='1' and clock'event)then
+if(s='0' and r='0') then
+tmp:=tmp;
+elsif (s='1' and r='1') then
+tmp:='Z';
+elsif (s='0' and r='1') then
+tmp:='0';
+else
+tmp:='1';
+end if;
+end if;
+q<=tmp;
+qbar<= not tmp;
+end process;
+end Behavioral;
+
+(C)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity jkff is
+Port ( j : in STD_LOGIC;
+k : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qn : out STD_LOGIC);
+end jkff;
+architecture Structural of jkff is
+component srflipflop is
+Port ( s : in STD_LOGIC;
+r : in STD_LOGIC;
+clock : in STD_LOGIC;
+q : out STD_LOGIC;
+qbar : out STD_LOGIC);
+end component;
+signal ss,sr,sq,sqn:std_logic;
+begin
+sr<=k and sq;
+ss<=j and sqn;
+q<=sq;
+qn<=sqn;
+m1 : srflipflop port map(s=>ss,r=>sr,clock=>clock,q=>sq,qbar=>sqn);
+end Structural;
+
+(D)
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+entity tflipflop is
+port( T: in std_logic;
+Clock: in std_logic;
+Q: out std_logic);
+end tflipflop;
+architecture Behavioral of tflipflop is
+signal tmp: std_logic;
+begin
+process (Clock)
+begin
+if (Clock'event and Clock='1') then
+if T='0' then
+tmp <= tmp;
+elsif T='1' then
+tmp <= not (tmp);
+end if;
+end if;
+end process;
+Q <= tmp;
+end Behavioral;
+
+
+

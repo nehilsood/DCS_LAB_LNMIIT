@@ -1,0 +1,214 @@
+TASK 1-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity MUX2_1 is
+    Port ( D0 : in STD_LOGIC;
+           D1 : in STD_LOGIC;
+           S : in STD_LOGIC;
+           D_out : out STD_LOGIC);
+end MUX2_1;
+
+architecture DATAFLOW of MUX2_1 is
+
+begin
+D_out <= (((not S) and D0) or ( S and D1));
+
+
+end DATAFLOW;
+
+------------------------------------------------------------------------------------
+
+TASK 2- 
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity Mux2_1 is
+    Port ( D0 : in STD_LOGIC;
+           D1 : in STD_LOGIC;
+           S : in STD_LOGIC;
+           D_out : out STD_LOGIC);
+     
+end Mux2_1;
+
+architecture Behavioral of Mux2_1 is
+begin
+process(D0,D1,S)
+begin
+case S is
+when '0' => D_out <= D0;
+when others => D_out <= D1;
+end case;
+end process;
+end Behavioral;
+
+-----------------------------------------------------------------------------------------------------
+
+TASK 3-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity MUX4_1 is
+    Port ( D0 : in STD_LOGIC;
+           D1 : in STD_LOGIC;
+           D2 : in STD_LOGIC;
+           D3 : in STD_LOGIC;
+           S0 : in STD_LOGIC;
+           S1 : in STD_LOGIC;
+           D_out : out STD_LOGIC);
+end MUX4_1;
+
+architecture DATAFLOW of MUX4_1 is
+
+begin
+D_out <= (((not S0) and (not S1) and D0) or ( S0 and (not S1) and D1) or ((not S0) and S1 and D2) or ( (S0 and S1) and D3));
+
+end DATAFLOW;
+
+--------------------------------------------------------------------------------------------------------------------------
+
+TASK 4-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity MUX2_1 is
+    Port ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           S2_1 : in STD_LOGIC;
+           MUX2_1out : out STD_LOGIC);
+end MUX2_1;
+
+architecture DATAFLOW of MUX2_1 is
+
+begin
+MUX2_1out <= (((not S2_1) and I0) or ( S2_1 and I1));
+
+
+end DATAFLOW;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity Mux4_1 is
+    Port ( D0 : in STD_LOGIC;
+           D1 : in STD_LOGIC;
+           D2 : in STD_LOGIC;
+           D3 : in STD_LOGIC;
+           S0 : in STD_LOGIC;
+           S1 : in STD_LOGIC;
+           D_out : out STD_LOGIC);
+end Mux4_1;
+
+architecture Structural of Mux4_1 is
+component Mux2_1 is
+Port     ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           S2_1 : in STD_LOGIC;
+           MUX2_1out : out STD_LOGIC);
+end component;  
+signal temp1,temp2 : std_logic;         
+begin
+u1: Mux2_1 port map( I0 => D0, I1 => D1, S2_1 => S1, MUX2_1out => temp1);
+u2: Mux2_1 port map( I0 => D2, I1 => D3, S2_1 => S1, MUX2_1out => temp2);
+u3: Mux2_1 port map( I0 => temp1, I1 => temp2, S2_1 => S0, MUX2_1out => D_out);
+
+end Structural;
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+TASK 5-
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity MUX4_1 is
+    Port ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           I2 : in STD_LOGIC;
+           I3 : in STD_LOGIC;
+           a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           MUX4_1out : out STD_LOGIC);
+end MUX4_1;
+
+architecture DATAFLOW of MUX4_1 is
+
+begin
+MUX4_1out <= (((not a) and (not b) and I0) or ( a and (not b) and I1) or ((not a) and b and I2) or ( (a and b) and I3));
+
+end DATAFLOW;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
+entity MUX2_1 is
+    Port ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           S : in STD_LOGIC;
+           MUX2_1out : out STD_LOGIC);
+end MUX2_1;
+
+architecture DATAFLOW of MUX2_1 is
+
+begin
+MUX2_1out <= (((not S) and I0) or ( S and I1));
+
+
+end DATAFLOW;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity MUX8_1 is
+    Port ( D0 : in STD_LOGIC;
+           D1 : in STD_LOGIC;
+           D2 : in STD_LOGIC;
+           D3 : in STD_LOGIC;
+           D4 : in STD_LOGIC;
+           D5 : in STD_LOGIC;
+           D6 : in STD_LOGIC;
+           D7 : in STD_LOGIC;
+           S0 : in STD_LOGIC;
+           S1 : in STD_LOGIC;
+           S2 : in STD_LOGIC;
+           D_out : out STD_LOGIC);
+end MUX8_1;
+
+architecture structural of MUX8_1 is
+component MUX4_1 is
+    Port ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           I2 : in STD_LOGIC;
+           I3 : in STD_LOGIC;
+           a : in STD_LOGIC;
+           b : in STD_LOGIC;
+           MUX4_1out : out STD_LOGIC);
+end component;
+
+component MUX2_1 is
+    Port ( I0 : in STD_LOGIC;
+           I1 : in STD_LOGIC;
+           S : in STD_LOGIC;
+           MUX2_1out : out STD_LOGIC);
+end component;
+
+signal temp1, temp2 : std_logic;
+
+begin
+
+u1: MUX4_1 port map( I0 => D0, I1 => D1, I2 => D2, I3 => D3 , a => S1, b => S2, MUX4_1out => temp1);
+u2: MUX4_1 port map( I0 => D4, I1 => D5, I2 => D6, I3 => D7 , a => S1, b => S2, MUX4_1out => temp2);
+u3: MUX2_1 port map( I0 => temp1, I1 => temp2, S => S0, MUX2_1out => D_out);
+
+end structural;
